@@ -1,3 +1,5 @@
+let uploadedFiles = [];
+
 document.getElementById('jsonInput').addEventListener('change', function(event) {
     const file = event.target.files[0]; 
     
@@ -7,29 +9,26 @@ document.getElementById('jsonInput').addEventListener('change', function(event) 
         reader.onload = function(e) {
             const jsonData = JSON.parse(e.target.result); 
             
-            // 1. Tender er details dekhano
             document.getElementById('tenderDetails').innerHTML = `
                 <p><strong>Tender ID:</strong> ${jsonData.tender.tender_id}</p>
                 <p><strong>Title:</strong> ${jsonData.tender.title}</p>
                 <p><strong>Deadline:</strong> ${jsonData.tender.submission_deadline}</p>
             `;
 
-            // 2. Requirements section ta visible kora
             document.getElementById('requirementsSection').style.display = 'block';
+            document.getElementById('pdfUploadSection').style.display = 'block';
 
-            // 3. Document er list k order onujayi sajano
             let requirements = jsonData.tender.requirements;
             requirements.sort((a, b) => a.order - b.order); 
 
-            // 4. Table er vitore data gulo dhokano
             const tbody = document.getElementById('requirementsBody');
-            tbody.innerHTML = ''; // aager kisu thakle clear kore nilam
+            tbody.innerHTML = ''; 
 
             requirements.forEach(req => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${req.order}</td>
-                    <td>${req.title_en}</td> <!-- Ekhn English nam ta dekhacchi -->
+                    <td>${req.title_en}</td>
                     <td>${req.mandatory ? 'Yes' : 'No'}</td>
                     <td>${req.has_expiry ? 'Yes' : 'No'}</td>
                 `;
@@ -40,3 +39,38 @@ document.getElementById('jsonInput').addEventListener('change', function(event) 
         reader.readAsText(file); 
     }
 });
+
+document.getElementById('pdfInput').addEventListener('change', function(event) {
+    const files = event.target.files;
+    
+    for (let file of files) {
+        if (file.type !== 'application/pdf') {
+            alert(`Error: "${file.name}" is not a PDF! Only PDF files are allowed.`);
+            continue;
+        }
+        
+        uploadedFiles.push({ file: file, name: file.name });
+    }
+    
+    renderPdfList();
+    event.target.value = ''; 
+});
+
+function renderPdfList() {
+    const listDiv = document.getElementById('pdfList');
+    listDiv.innerHTML = '<h4>Uploaded Files:</h4>';
+    
+    uploadedFiles.forEach((item, index) => {
+        listDiv.innerHTML += `
+            <div style="margin-bottom: 5px; padding: 5px; border: 1px solid #eee; display: flex; justify-content: space-between;">
+                <span>📄 ${item.name}</span>
+                <button onclick="removeFile(${index})" style="color: red; cursor: pointer;">Remove</button>
+            </div>
+        `;
+    });
+}
+
+function removeFile(index) {
+    uploadedFiles.splice(index, 1);
+    renderPdfList();
+}
