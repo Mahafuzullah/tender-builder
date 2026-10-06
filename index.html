@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tender Package Builder</title>
+    <!-- PDF niye kaj korar library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    
+    <!-- Ektu sundor dekhanor jonno basic CSS -->
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .section { margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    </style>
+</head>
+<body>
+    <h1>Tender Document Package Builder</h1>
+    
+    <!-- JSON Upload Section -->
+    <div class="section">
+        <h3>Step 1: Upload requirements.json</h3>
+        <input type="file" id="jsonInput" accept=".json">
+        <div id="tenderDetails" style="margin-top: 10px;"></div>
+    </div>
+
+    <!-- Required Documents Dekhanor Section (Etai amader next step) -->
+    <div class="section" id="requirementsSection" style="display: none;">
+        <h3>Step 2: Required Documents</h3>
+        <table id="requirementsTable">
+            <thead>
+                <tr>
+                    <th>Order</th>
+                    <th>Document Name</th>
+                    <th>Mandatory?</th>
+                    <th>Needs Expiry?</th>
+                </tr>
+            </thead>
+            <tbody id="requirementsBody">
+                <!-- Javascript theke data ekhane asbe -->
+            </tbody>
+        </table>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
