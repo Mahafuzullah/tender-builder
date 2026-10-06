@@ -3,33 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <title>Tender Package Builder</title>
+    <!-- PDF Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        .section { margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 900px; margin: auto; }
+        .section { margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; background: #f9f9f9; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: #fff; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        select, input[type="date"] { padding: 5px; width: 100%; }
+        .status-missing { color: red; font-weight: bold; }
+        .status-ok { color: green; font-weight: bold; }
+        .status-not { color: gray; }
+        button { cursor: pointer; padding: 8px 15px; }
     </style>
 </head>
 <body>
-    <h1>Tender Document Package Builder</h1>
+    <div style="text-align: right; margin-bottom: 10px;">
+        <button id="langToggle" onclick="toggleLanguage()">বাংলায় দেখুন</button>
+    </div>
+    
+    <h1 id="mainTitle">Tender Document Package Builder</h1>
     
     <div class="section">
-        <h3>Step 1: Upload requirements.json</h3>
+        <h3 id="step1Title">Step 1: Upload requirements.json</h3>
         <input type="file" id="jsonInput" accept=".json">
         <div id="tenderDetails" style="margin-top: 10px;"></div>
     </div>
 
+    <div class="section" id="pdfUploadSection" style="display: none;">
+        <h3 id="step2Title">Step 2: Upload PDF Files</h3>
+        <input type="file" id="pdfInput" accept=".pdf" multiple>
+        <div id="pdfList" style="margin-top: 10px;"></div>
+    </div>
+
     <div class="section" id="requirementsSection" style="display: none;">
-        <h3>Step 2: Required Documents</h3>
+        <h3 id="step3Title">Step 3: Match Documents & Check Status</h3>
         <table id="requirementsTable">
             <thead>
                 <tr>
                     <th>Order</th>
-                    <th>Document Name</th>
-                    <th>Mandatory?</th>
-                    <th>Needs Expiry?</th>
+                    <th id="thDocName">Document Name</th>
+                    <th>Match File</th>
+                    <th>Expiry Date</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody id="requirementsBody">
@@ -37,10 +54,9 @@
         </table>
     </div>
 
-    <div class="section" id="pdfUploadSection" style="display: none;">
-        <h3>Step 3: Upload PDF Files</h3>
-        <input type="file" id="pdfInput" accept=".pdf" multiple>
-        <div id="pdfList" style="margin-top: 10px;"></div>
+    <div class="section" id="generateSection" style="display: none; text-align: center;">
+        <button id="generateBtn" style="padding: 12px 25px; font-size: 16px; background: #4CAF50; color: white; border: none; border-radius: 5px;" disabled>Generate Package</button>
+        <p id="generateMsg" style="color: red; margin-top: 10px; font-weight: bold;"></p>
     </div>
 
     <script src="app.js"></script>
